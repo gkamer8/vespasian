@@ -19,6 +19,9 @@ from peft import (
 )
 
 
+DATA_PATH = os.path.join("datasets", "alpaca", "alpaca_data_cleaned.json")
+
+
 # optimized for RTX 4090. for larger GPUs, increase some of these?
 MICRO_BATCH_SIZE = 4  # this could actually be 5 but i like powers of 2
 BATCH_SIZE = 128
@@ -34,7 +37,6 @@ TARGET_MODULES = [
     "q_proj",
     "v_proj",
 ]
-DATA_PATH = "alpaca_data_cleaned.json"
 
 device_map = "auto"
 world_size = int(os.environ.get('WORLD_SIZE', 1))

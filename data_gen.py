@@ -71,14 +71,41 @@ def get_more_prompts(prompt_file, example_file):
     qs = examples + [x[x.index(".") + 2:] for x in lines if "." in x]
     return qs
 
-if __name__ == '__main__':
-    prompts_dir = os.path.join("data_gen_prompts", "coding")
 
-    outfile = os.path.join(prompts_dir, "coding_prompts.json")
-    gen_qs_prompt_path = os.path.join(prompts_dir, "gen_coding_qs_prompt.txt")
-    example_qs_path = os.path.join(prompts_dir, "example_coding_prompts.txt")
+PROMPT_FILES = {
+    'coding': {
+        'outfile': 'coding_prompts.json',
+        'gen_qs_prompt': 'gen_coding_qs_prompt.txt',
+        'example_qs': 'example_coding_prompts.txt'
+    },
+    'philosophy': {
+        'outfile': 'phil_prompts.json',
+        'gen_qs_prompt': 'gen_phil_qs_prompt.txt',
+        'example_qs': 'example_phil_prompts.txt'
+    },
+    'politics': {
+        'outfile': 'prompts.json',
+        'gen_qs_prompt': 'gen_qs_prompt.txt',
+        'example_qs': 'example_prompts.txt'
+    }
+}
+
+# Takes a subject, which is a subdir of root_dir, and uses associated files
+#   in PROMPT_FILES to generate new questions for answering
+def gen_prompts(subject, root_dir='data_gen_prompts', quiet=False):
+    prompts_dir = os.path.join(root_dir, subject)
+
+    outfile = os.path.join(prompts_dir, PROMPT_FILES[subject]['outfile'])
+    gen_qs_prompt_path = os.path.join(prompts_dir, PROMPT_FILES[subject]['gen_qs_prompt'])
+    example_qs_path = os.path.join(prompts_dir, PROMPT_FILES[subject]['example_qs'])
 
     qs = get_more_prompts(gen_qs_prompt_path, example_qs_path)
-    print(qs)
+    if not quiet:
+        print(qs)
     json.dump(qs, open(outfile, "w"))
+
+
+if __name__ == '__main__':
+    subject = 'politics'
+    gen_prompts(subject)
     
